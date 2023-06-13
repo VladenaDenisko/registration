@@ -30,5 +30,18 @@ Finally, the file sets the primary key and auto-increment values for the my_id c
 - Using password hashing:
   Function password_hash($my_password, PASSWORD_DEFAULT) takes variable $my_password and itself generates and adds to it "Salt" and encrypts it all   with "bcrypt" algorithm. This function is used in do_register.php and do_edit.php files.
 
-- Checking input data for SQL injections and XSS vulnerabilities:
+- Checking input data for SQL injections:
+  When constructing a query using parameters:
+  SELECT * FROM my_user_table WHERE my_fio LIKE :my_fio
+  where :my_fio is not a direct variable from the input field, but an input parameter which you want to describe where the value comes from and what     type it is:
+  bindParam("my_fio", $my_search_text, PDO::PARAM_STR)
+  By using this method, whatever will be written in the search field, it will always be as Variable :my_fio and no more (i.e. it will not be treated     as a continuation of the code) for the sql query
+
+  Example from the project:
+  $my_fio = $_POST['my_fio'] . '%'; // The value of the input field is assigned to the $my_fio variable
+  $query = $connection->prepare('SELECT * FROM my_user_table WHERE my_fio LIKE :my_fio'); // Prepared query and parameter      
+  $query->bindParam("my_fio", $my_fio, PDO::PARAM_STR); // Parameter description where the value is taken from and its type
+  $query->execute(); // We apply the query
+
+  In the project, the files do_search.php, do_register.php, edit.php, do_edit.php use sql queries and all of them use Parameters, i.e. with injection   protection.
   
