@@ -25,3 +25,10 @@ Finally, the file sets the primary key and auto-increment values for the my_id c
     2.1 Set USER, PASSWORD, HOST, DATABASE fields accoding to the information from Step 1.
   
 - Step 3: Run Web Registaration Portal by entering it's domain name or IP-address into browser.
+
+## Security measures used:
+- Using password hashing:
+  Function password_hash($my_password, PASSWORD_DEFAULT) takes variable $my_password and itself generates and adds to it "Salt" and encrypts it all   with "bcrypt" algorithm. This function is used in do_register.php and do_edit.php files.
+
+- Checking input data for SQL injections and XSS vulnerabilities:
+  
