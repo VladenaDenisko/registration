@@ -2,7 +2,7 @@
 A server side website that allows you to create a simple PHP-based web registattion portal.
 
 ## Structure
-- localhost: contains all php files of a Web registation portal
+- localhost folder: contains all php files of a Web registation portal
 - database.sql: contains template MySql DB
 
 ## Requirements
@@ -10,6 +10,10 @@ A server side website that allows you to create a simple PHP-based web registatt
 
 ## Instalallation steps
 - Step 1: Database
+The file creates a table called my_user_table with columns for my_id, my_login, my_password, my_fio, my_email, my_phone, my_address, and my_birthday. The table uses the MyISAM storage engine and the utf8mb4 character set and collation.
+Following the creation of the table, the file inserts data into the my_user_table table.
+Finally, the file sets the primary key and auto-increment values for the my_id column of the my_user_table table.
+
   1. Create a new DB from your MySql panel
   2. Import database.sql to it
   3. Add new username or use existing one
