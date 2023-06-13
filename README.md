@@ -2,7 +2,7 @@
 A server side website that allows you to create a simple PHP-based web registattion portal.
 
 ## Structure
-- localhost folder: contains all php files of a Web registation portal
+- websiteFiles folder: contains all php files of a Web registation portal
 - database.sql: contains template MySql DB
 
 ## Requirements
