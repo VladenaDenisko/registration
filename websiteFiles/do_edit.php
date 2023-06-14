@@ -43,7 +43,7 @@
 				</body>
 			</html>';
 		}
-		elseif (password_verify($my_old_password, $result['password'])) {
+		elseif (!password_verify($my_old_password, $result['my_password'])) {
 			echo '<html>
 				<head>
 					<title>Ошибка</title>
