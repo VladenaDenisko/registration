@@ -1,47 +1,110 @@
-# Simple Web Registration Portal
-A server side website that allows you to create a simple PHP-based web registattion portal.
+#WEB-портал студентов для регистрации предметов
+##Структура сайта:
+1. Главная страница:
+   - Эта страница будет служить точкой входа для пользователей.
+   - Здесь можно представить краткое описание сайта и предложить пользователям войти или зарегистрироваться.
 
-## Structure
-- websiteFiles folder: contains all php files of a Web registation portal
-- database.sql: contains template MySql DB
+2. Страница регистрации:
+   - Эта страница предоставляет форму для пользователей, чтобы зарегистрироваться на сайте.
+   - Пользователи будут заполнять свое полное имя, электронную почту и пароль.
+   - После отправки формы, данные пользователя будут сохранены в базе данных, и пользователю будет отправлено письмо с кодом для подтверждения регистрации.
 
-## Requirements
-- You can use any PHP+MySQL solution such as: LAMP, XAMP, OpenServer, etc.
+3. Страница подтверждения регистрации:
+   - Эта страница будет отображаться, когда пользователь переходит по ссылке подтверждения, полученной в письме.
+   - По этой ссылке будет передаваться уникальный код, который вы будете проверять на сервере.
+   - Если код подтверждения действителен, изменться статус учетной записи пользователя на "Активен".
 
-## Instalallation steps
-- Step 1: Database
-The file creates a table called my_user_table with columns for my_id, my_login, my_password, my_fio, my_email, my_phone, my_address, and my_birthday. The table uses the MyISAM storage engine and the utf8mb4 character set and collation.
-Following the creation of the table, the file inserts data into the my_user_table table.
-Finally, the file sets the primary key and auto-increment values for the my_id column of the my_user_table table.
+4. Страница входа:
+   - На этой странице пользователи смогут ввести свою электронную почту и пароль для входа на сайт.
+   - Будут проверяться введенные учетные данные и, в случае успешного входа, устанавливать сессию для пользователя.
 
-  1. Create a new DB from your MySql panel
-  2. Import database.sql to it
-  3. Add new username or use existing one
-  4. Assign username for a DB
+5. Страница выхода:
+   - Пользователи смогут выйти из своей учетной записи, нажав на ссылку выхода.
+   - На этой странице будет разрушаться текущая сессия пользователя и перенаправлять на главную страницу.
 
-- Step 2: PHP files
-  1. Copy localhost folder content into your local or remote web server folder
-  2. Edit secret_folder/db_config.php file.
-    2.1 Set USER, PASSWORD, HOST, DATABASE fields accoding to the information from Step 1.
-  
-- Step 3: Run Web Registaration Portal by entering it's domain name or IP-address into browser.
+6. Страница администратора:
+   - Эта страница будет доступна только пользователям с ролью "Администратор".
+   - На этой странице вы можете отобразить таблицы с предметами, преподавателями и студентами в алфавитном порядке.
+   - Для каждой таблицы предоставьте возможность добавлять, изменять и удалять записи.
 
-## Security measures used:
-- Using password hashing:
-  Function password_hash($my_password, PASSWORD_DEFAULT) takes variable $my_password and itself generates and adds to it "Salt" and encrypts it all   with "bcrypt" algorithm. This function is used in do_register.php and do_edit.php files.
+7. Страница преподавателя:
+   - Эта страница будет доступна только пользователям с ролью "Преподаватель".
+   - На этой странице вы можете отобразить таблицу с предметами, которые преподаватель ведет, а также студентов, зарегистрированных на эти предметы.
+   - Для каждого предмета и студента предоставьте возможность изменять соответствующие данные.
 
-- Checking input data for SQL injections:
-  When constructing a query using parameters:
-  SELECT * FROM my_user_table WHERE my_fio LIKE :my_fio
-  where :my_fio is not a direct variable from the input field, but an input parameter which you want to describe where the value comes from and what     type it is:
-  bindParam("my_fio", $my_search_text, PDO::PARAM_STR)
-  By using this method, whatever will be written in the search field, it will always be as Variable :my_fio and no more (i.e. it will not be treated     as a continuation of the code) for the sql query
+8. Страница студента:
+   - Эта страница будет доступна только пользователям с ролью "Студент".
+   - На этой странице будет отображена таблица с расписанием предметов студента.
 
-  Example from the project:
-  $my_fio = $_POST['my_fio'] . '%'; // The value of the input field is assigned to the $my_fio variable
-  $query = $connection->prepare('SELECT * FROM my_user_table WHERE my_fio LIKE :my_fio'); // Prepared query and parameter      
-  $query->bindParam("my_fio", $my_fio, PDO::PARAM_STR); // Parameter description where the value is taken from and its type
-  $query->execute(); // We apply the query
+##Для реализации безопасности и описанной логики работы сайта на PHP, планирую использовать следующие подходы и методы:
+1. Аутентификация и авторизация:
+   - Систему регистрации и входа для пользователей с использованием хеширования паролей. Будет использоваться функция `password_hash()` для хеширования паролей при регистрации и функцию `password_verify()` для проверки пароля при входе.
+   - Механизм сессий для отслеживания аутентифицированных пользователей. Будет использоваться функции `session_start()`, `$_SESSION` и `session_destroy()` для работы с сессиями.
+   - Генерация токенов для защиты сессий. Будут создаваться случайные токены, сохраняться их в базе данных или в сессии пользователя, и проверять их при каждом запросе, чтобы обеспечить безопасность сессий.
 
-  In the project, the files do_search.php, do_register.php, edit.php, do_edit.php use sql queries and all of them use Parameters, i.e. with injection   protection.
-  
+2. Блокировка учетных записей:
+   - Учет неправильных попыток входа для каждого пользователя. При каждой неудачной попытке входа увеличивайтся счетчик и проверяется его значение. Если количество попыток достигает определенного порога (например, 3), блокируется учетную запись.
+   - Механизм разблокировки учетных записей, который может быть выполнен только администратором. Будет добавлено поле "Blocked" в таблицу "Users" со значением "true" для заблокированных учетных записей. Только администратор может изменять это значение.
+
+3. Защита от несанкционированного доступа:
+   - Проверка роли и статусы пользователей перед выполнением действий, чтобы предотвратить несанкционированный доступ. Например, при обращении к определенным страницам или функциональности, будет проверяться, имеет ли пользователь необходимые права доступа.
+   - Разделенные данные и функциональность между различными ролями пользователей. Показывать только соответствующую информацию и возможности для каждой роли.
+
+4. Защита от подделки запросов межсайтовой подделки (CSRF):
+   - Генерация и использование CSRF-токенов для защиты от CSRF-атак. Включить CSRF-токены в формы и проверка их при обработке отправленных данных.
+   - Будет использована функция csrf_token() для генерации уникального токена и включение его в формы и запросы.
+
+5. Ограничение доступа к функциональности:
+   - Условия и проверки ролей и прав доступа для ограничения возможностей каждого типа пользователя. Проверка, имеет ли пользователь право на выполнение определенных действий, прежде чем позволять им выполняться.
+
+6. Сессия с автоматическим выходом:
+   - Механизм отслеживания активности пользователя. Если не было активности в течение определенного времени (например, 10 минут), разрушение сессии и выход из учетной записи автоматически.
+
+7. Защита от инъекций:
+   - Подготовленные выражения и параметризованные запросы для выполнения SQL-запросов, чтобы предотвратить атаки инъекций.
+   - Валидация и очистка данных, вводимые пользователем, прежде чем использовать их в SQL-запросах.
+
+8. Шифрование конфиденциальных данных:
+   - Методы шифрования, например, функции password_hash() и password_verify() для паролей.
+
+##Структура БД:
+1. Таблица "Users" (Пользователи):
+   - Поля: 
+     - Full Name (Полное имя) (VARCHAR)
+     - Email (Электронная почта) (VARCHAR)
+     - Status (Статус) (Активен, Выключен, Не подтвержден, заблокирован) (VARCHAR)
+     - Role (Роль) (Студент, Преподаватель, Администратор) (VARCHAR)
+     - Password (Пароль) (VARCHAR)
+   - Связь:
+     - Каждый пользователь может быть связан с несколькими лекциями в таблице "Lectures" посредством поля "Teacher" (Преподаватель).
+
+2. Таблица "Subjects" (Предметы):
+   - Поля: 
+     - Subject Name (Название предмета) (VARCHAR)
+     - Status (Статус) (Активен, Архивный) (VARCHAR)
+   - Связи:
+     - Поле "Subject Name" (Название предмета) в таблице "Lectures" связано с полем "Subject ID" (ID предмета) в таблице "Subjects".
+     - Поле "Subject ID" (ID предмета) в таблице "Schedule" связано с полем "Subject ID" (ID предмета) в таблице "Subjects".
+
+3. Таблица "Lectures" (Лекции):
+   - Поля: 
+     - Subject Name (Название предмета) (Ссылка на таблицу "Subjects") (INT)
+     - Teacher (Преподаватель) (Ссылка на таблицу "Users" с ролью Преподаватель и статусом Активен) (INT)
+     - Hours (Количество часов) (INT)
+     - Quotas (Количество квот) (INT)
+     - Status (Статус) (Доступен, Недоступен) (VARCHAR)
+   - Связи:
+     - Поле "Teacher" (Преподаватель) связано с полем "User ID" (ID пользователя) в таблице "Users".
+     - Поле "Subject Name" (Название предмета) связано с полем "Subject ID" (ID предмета) в таблице "Subjects".
+
+4. Таблица "Schedule" (Расписание):
+   - Поля:
+     - Student ID (ID студента) (Ссылка на таблицу "Users") (INT)
+     - Subject ID (ID предмета) (Ссылка на таблицу "Subjects") (INT)
+     - Teacher ID (ID преподавателя) (Ссылка на таблицу "Users" с ролью Преподаватель и статусом Активен) (INT)
+     - Max Concurrent and Retake Subjects (Максимальное количество одновременно активных и перездач предметов) (INT)
+     - Status (Статус) (Активный, Успешно завершен, Перездача, Провален) (VARCHAR)
+   - Связи:
+     - Поле "Student ID" (ID студента) связано с полем "User ID" (ID пользователя) в таблице "Users".
+     - Поле "Subject ID" (ID предмета) связано с полем "Subject ID" (ID предмета) в таблице "Subjects".
+     - Поле "Teacher ID" (ID преподавателя) связано с полем "User ID" (ID пользователя) в таблице "Users".
