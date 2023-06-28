@@ -82,7 +82,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `password`, `role`, `status`) VALUES
-(4, 'testart@testart.ru', '$2y$10$cJqR7dCrgmWT//Ir.0XK5uZZ3TLjdGiigUwVCKnTOdCPDxlvEz9oG', 'admin', 1);
+(1, 'admin@admin.local', '$2y$10$cJqR7dCrgmWT//Ir.0XK5uZZ3TLjdGiigUwVCKnTOdCPDxlvEz9oG', 'admin', 1);
 
 --
 -- Индексы сохранённых таблиц
