@@ -46,7 +46,7 @@ if (isset($_POST['subject_action'])) {
 
     if ($action === 'add') {
         $subjectName = escape($_POST['subject_name']);
-        $quota = (int) $_POST['quota'];
+        $quota = isset($_POST['quota']) ? (int) $_POST['quota'] : 0;
 
         $query = "INSERT INTO subjects (name, quota) VALUES ('$subjectName', $quota)";
         mysqli_query($mysqli, $query);
@@ -54,7 +54,7 @@ if (isset($_POST['subject_action'])) {
         if (isset($_POST['subject_id'])) {
             $subjectId = (int) $_POST['subject_id'];
             $subjectName = escape($_POST['subject_name']);
-            $quota = (int) $_POST['quota'];
+            $quota = isset($_POST['quota']) ? (int) $_POST['quota'] : 0;
 
             $query = "UPDATE subjects SET name = '$subjectName', quota = $quota WHERE id = $subjectId";
             mysqli_query($mysqli, $query);
@@ -70,6 +70,7 @@ if (isset($_POST['subject_action'])) {
 
     redirectToPage('admin_dashboard.php');
 }
+
 
 // Обработка действий, связанных с таблицей 'users' (преподаватели)
 if (isset($_POST['teacher_action'])) {
