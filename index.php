@@ -1,9 +1,6 @@
 <?php
 require_once 'db_connect.php';
-<<<<<<< HEAD
 require_once 'security.php';
-=======
->>>>>>> new_branch
 
 session_start();
 
@@ -13,17 +10,17 @@ if (isset($_SESSION['user_id'])) {
   $role = $_SESSION['role'];
   switch ($role) {
     case 'admin':
-      header('Location: admin_dashboard.php');
+      redirectToPage('Location: admin_dashboard.php');
       break;
     case 'teacher':
-      header('Location: teacher_dashboard.php');
+      redirectToPage('Location: teacher_dashboard.php');
       break;
     case 'student':
-      header('Location: student_dashboard.php');
+      redirectToPage('Location: student_dashboard.php');
       break;
     default:
       // Если у пользователя нет определенной роли, перенаправляем на страницу выхода
-      header('Location: logout.php');
+      redirectToPage('Location: logout.php');
       break;
   }
   exit();
@@ -34,11 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $email = $_POST['email'];
   $password = $_POST['password'];
 
-<<<<<<< HEAD
-=======
-  // Проверка введенных данных
-
->>>>>>> new_branch
   // Экранирование и очистка данных
   $email = escape($email);
   $password = escape($password);
@@ -51,40 +43,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $stmt->fetch();
   $stmt->close();
 
-<<<<<<< HEAD
   if ($userId && $userRole) {
-=======
-  // Если данные верны, авторизуем пользователя и перенаправляем на соответствующую страницу
-  if ($userId && $userRole) {
-    // Перенаправление на соответствующую страницу
->>>>>>> new_branch
     $_SESSION['user_id'] = $userId;
     $_SESSION['role'] = $userRole;
     switch ($userRole) {
       case 'admin':
-        header('Location: admin_dashboard.php');
+        redirectToPage('Location: admin_dashboard.php');
         break;
       case 'teacher':
-        header('Location: teacher_dashboard.php');
+        redirectToPage('Location: teacher_dashboard.php');
         break;
       case 'student':
-        header('Location: student_dashboard.php');
+        redirectToPage('Location: student_dashboard.php');
         break;
       default:
-<<<<<<< HEAD
-=======
-        // Если у пользователя нет определенной роли, перенаправляем на страницу выхода
->>>>>>> new_branch
-        header('Location: logout.php');
+        redirectToPage('Location: logout.php');
         break;
     }
     exit();
   } else {
-<<<<<<< HEAD
-=======
-    // Обработка случая, когда введенные данные не соответствуют записям в базе данных
-    // Вывод ошибки или другие действия по вашему усмотрению
->>>>>>> new_branch
     echo "Неправильный email или пароль.";
   }
 }
@@ -111,8 +88,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   </div>
 </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> new_branch

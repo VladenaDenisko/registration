@@ -93,6 +93,12 @@
         exit;
     }
 
+    function redirectToPage($value)
+    {
+        header("Location: " . $value);
+        exit;
+    }    
+
     // Функция экранирования данных для вывода в HTML
     function escapeHTML($value)
     {
