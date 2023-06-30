@@ -74,22 +74,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Страница регистрации</title>
-  <link rel="stylesheet" type="text/css" href="styles.css">
+    <title><?php echo escapeHTML('Страница регистрации'); ?></title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Регистрация</h1>
-    <p>Заполните форму ниже для регистрации на сайте.</p>
+    <div class="container">
+        <h1><?php echo escapeHTML('Регистрация'); ?></h1>
+        <p><?php echo escapeHTML('Заполните форму ниже для регистрации на сайте.'); ?></p>
 
-    <div class="registration-form">
-      <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-        <input type="text" name="full_name" placeholder="Полное имя" required>
-        <input type="email" name="email" placeholder="Электронная почта" required>
-        <input type="password" name="password" placeholder="Пароль" required>
-        <button type="submit">Зарегистрироваться</button>
-      </form>
+        <div class="registration-form">
+            <form action="<?php echo escapeHTML($_SERVER['PHP_SELF']); ?>" method="POST">
+                <input type="text" name="full_name" placeholder="<?php echo escapeHTML('Полное имя'); ?>" required>
+                <input type="email" name="email" placeholder="<?php echo escapeHTML('Электронная почта'); ?>" required>
+                <input type="password" name="password" placeholder="<?php echo escapeHTML('Пароль'); ?>" required>
+                <button type="submit"><?php echo escapeHTML('Зарегистрироваться'); ?></button>
+            </form>
+        </div>
     </div>
-  </div>
 </body>
 </html>

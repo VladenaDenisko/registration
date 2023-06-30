@@ -1,5 +1,7 @@
 <?php
 session_start();
+
+// Подключение к базе данных
 require_once 'db_connect.php';
 require_once 'security.php';
 
@@ -142,12 +144,12 @@ if (isset($_POST['student_action'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Панель администратора</title>
+    <title><?php echo escapeHTML('Панель администратора'); ?></title>
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Добро пожаловать, Администратор!</h1>
+        <h1>Добро пожаловать, <?php echo escapeHTML('Администратор'); ?>!</h1>
         <div class="table-container">
             <h2>Управление предметами</h2>
             <table>
@@ -159,19 +161,19 @@ if (isset($_POST['student_action'])) {
                 </tr>
                 <?php foreach ($subjects as $subject) : ?>
                     <tr>
-                        <td><?php echo $subject['id']; ?></td>
-                        <td><?php echo $subject['name']; ?></td>
-                        <td><?php echo $subject['quota']; ?></td>
+                        <td><?php echo escapeHTML($subject['id']); ?></td>
+                        <td><?php echo escapeHTML($subject['name']); ?></td>
+                        <td><?php echo escapeHTML($subject['quota']); ?></td>
                         <td class="btn-row">
                             <form method="post" action="admin_dashboard.php">
-                                <input type="hidden" name="subject_id" value="<?php echo $subject['id']; ?>">
-                                <input type="hidden" name="subject_name" value="<?php echo $subject['name']; ?>">
-                                <input type="hidden" name="quota" value="<?php echo $subject['quota']; ?>">
+                                <input type="hidden" name="subject_id" value="<?php echo escapeHTML($subject['id']); ?>">
+                                <input type="hidden" name="subject_name" value="<?php echo escapeHTML($subject['name']); ?>">
+                                <input type="hidden" name="quota" value="<?php echo escapeHTML($subject['quota']); ?>">
                                 <input type="hidden" name="subject_action" value="update">
                                 <input type="submit" value="Обновить">
                             </form>
                             <form method="post" action="admin_dashboard.php">
-                                <input type="hidden" name="subject_id" value="<?php echo $subject['id']; ?>">
+                                <input type="hidden" name="subject_id" value="<?php echo escapeHTML($subject['id']); ?>">
                                 <input type="hidden" name="subject_action" value="delete">
                                 <input type="submit" value="Удалить">
                             </form>
@@ -198,17 +200,17 @@ if (isset($_POST['student_action'])) {
                 </tr>
                 <?php foreach ($teachers as $teacher) : ?>
                     <tr>
-                        <td><?php echo $teacher['id']; ?></td>
-                        <td><?php echo $teacher['full_name']; ?></td>
-                        <td><?php echo $teacher['email']; ?></td>
+                        <td><?php echo escapeHTML($teacher['id']); ?></td>
+                        <td><?php echo escapeHTML($teacher['full_name']); ?></td>
+                        <td><?php echo escapeHTML($teacher['email']); ?></td>
                         <td class="btn-row">
                             <form method="post" action="admin_dashboard.php">
-                                <input type="hidden" name="teacher_id" value="<?php echo $teacher['id']; ?>">
+                                <input type="hidden" name="teacher_id" value="<?php echo escapeHTML($teacher['id']); ?>">
                                 <input type="hidden" name="teacher_action" value="update">
                                 <input type="submit" value="Обновить">
                             </form>
                             <form method="post" action="admin_dashboard.php">
-                                <input type="hidden" name="teacher_id" value="<?php echo $teacher['id']; ?>">
+                                <input type="hidden" name="teacher_id" value="<?php echo escapeHTML($teacher['id']); ?>">
                                 <input type="hidden" name="teacher_action" value="delete">
                                 <input type="submit" value="Удалить">
                             </form>
@@ -236,14 +238,14 @@ if (isset($_POST['student_action'])) {
                 </tr>
                 <?php foreach ($students as $student) : ?>
                     <tr>
-                        <td><?php echo $student['id']; ?></td>
-                        <td><?php echo $student['full_name']; ?></td>
-                        <td><?php echo $student['email']; ?></td>
-                        <td><?php echo $student['status']; ?></td>
+                        <td><?php echo escapeHTML($student['id']); ?></td>
+                        <td><?php echo escapeHTML($student['full_name']); ?></td>
+                        <td><?php echo escapeHTML($student['email']); ?></td>
+                        <td><?php echo escapeHTML($student['status']); ?></td>
                         <td class="btn-row">
                             <form method="post" action="admin_dashboard.php">
-                                <input type="hidden" name="student_id" value="<?php echo $student['id']; ?>">
-                                <input type="hidden" name="student_status" value="<?php echo $student['status']; ?>">
+                                <input type="hidden" name="student_id" value="<?php echo escapeHTML($student['id']); ?>">
+                                <input type="hidden" name="student_status" value="<?php echo escapeHTML($student['status']); ?>">
                                 <input type="hidden" name="student_action" value="update_status">
                                 <select name="status" onchange="this.form.submit()">
                                     <option value="active" <?php if ($student['status'] === 'active') echo 'selected'; ?>>Активен</option>
@@ -251,7 +253,7 @@ if (isset($_POST['student_action'])) {
                                 </select>
                             </form>
                             <form method="post" action="admin_dashboard.php">
-                                <input type="hidden" name="student_id" value="<?php echo $student['id']; ?>">
+                                <input type="hidden" name="student_id" value="<?php echo escapeHTML($student['id']); ?>">
                                 <input type="hidden" name="student_action" value="update_password">
                                 <input type="password" name="student_password" placeholder="Новый пароль" required>
                                 <input type="submit" value="Изменить пароль">

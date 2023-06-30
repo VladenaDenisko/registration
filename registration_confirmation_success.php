@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Успешное подтверждение регистрации</title>
+  <title><?php echo escapeHTML('Успешное подтверждение регистрации'); ?></title>
   <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>

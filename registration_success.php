@@ -10,17 +10,17 @@ if (isset($_SESSION['user_id'])) {
   $role = $_SESSION['role'];
   switch ($role) {
     case 'admin':
-      header('Location: admin_dashboard.php');
+      redirectToPage('admin_dashboard.php');
       exit();
     case 'teacher':
-      header('Location: teacher_dashboard.php');
+      redirectToPage('teacher_dashboard.php');
       exit();
     case 'student':
-      header('Location: student_dashboard.php');
+      redirectToPage('student_dashboard.php');
       exit();
     default:
       // Если у пользователя нет определенной роли, перенаправляем на страницу выхода
-      header('Location: logout.php');
+      redirectToPage('logout.php');
       exit();
   }
 }
@@ -48,7 +48,7 @@ if ($userId) {
     $_SESSION['role'] = 'student';
     
     // Перенаправляем на страницу с сообщением об успешном подтверждении регистрации
-    header('Location: registration_confirmation_success.php');
+    redirectToPage('registration_confirmation_success.php');
     exit();
 } else {
     echo 'Недействительный код подтверждения.';
@@ -58,7 +58,7 @@ if ($userId) {
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Подтверждение регистрации</title>
+  <title><?php echo escapeHTML('Подтверждение регистрации'); ?></title>
   <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>

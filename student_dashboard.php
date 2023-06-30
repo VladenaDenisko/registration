@@ -1,14 +1,14 @@
 <?php
-// Проверка роли пользователя
 session_start();
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'student') {
-    redirectToPage('Location: index.php');
-    exit();
-}
 
 // Подключение к базе данных
 require_once 'db_connect.php';
 require_once 'security.php';
+
+// Проверка роли пользователя
+if (!checkUserRole('student')) {
+    redirectToLogin();
+}
 
 // Получение данных студента
 $student_id = $_SESSION['user_id'];
@@ -38,7 +38,7 @@ $stmt->close();
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <title>Страница студента</title>
+    <title><?php echo escapeHTML('Страница студента'); ?></title>
 </head>
 <body>
 <div class="container">
