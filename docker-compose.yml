@@ -35,4 +35,8 @@ services:
       - lamp-docker
 networks:
   lamp-docker:
+<<<<<<< HEAD
     driver: bridge
+=======
+    driver: bridge
+>>>>>>> new_branch

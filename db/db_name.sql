@@ -70,7 +70,11 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `role` enum('admin','teacher','student') NOT NULL,
+<<<<<<< HEAD
   `status` enum('active','inactive', 'blocked') NOT NULL DEFAULT 'inactive',
+=======
+  `status` enum('active','inactive') NOT NULL DEFAULT 'inactive',
+>>>>>>> new_branch
   `confirmation_code` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

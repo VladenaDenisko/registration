@@ -1,6 +1,9 @@
 <?php
 require_once 'db_connect.php';
+<<<<<<< HEAD
 require_once 'security.php';
+=======
+>>>>>>> new_branch
 
 session_start();
 
@@ -42,10 +45,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Хеширование пароля
   $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
+<<<<<<< HEAD
+=======
+  // Сохранение данных пользователя в базе данных
+
+>>>>>>> new_branch
   // Генерация кода для подтверждения регистрации
   $confirmationCode = generateConfirmationCode();
 
   // Сохранение данных пользователя и кода подтверждения в базе данных
+<<<<<<< HEAD
   $query = "INSERT INTO users (full_name, email, password, role, status, confirmation_code) VALUES ('$fullName', '$email', '$hashedPassword', 'student', 'inactive', '$confirmationCode')";
   mysqli_query($mysqli, $query);
 
@@ -64,6 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   
   // Отправка письма с кодом подтверждения
   sendConfirmationEmail($email, $confirmationCode);
+=======
+
+  // Отправка письма с кодом для подтверждения регистрации
+>>>>>>> new_branch
 
   // Перенаправление на страницу с сообщением об успешной регистрации
   header('Location: registration_success.php');
@@ -75,7 +88,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <head>
   <title>Страница регистрации</title>
+<<<<<<< HEAD
   <link rel="stylesheet" type="text/css" href="styles.css">
+=======
+  <link rel="stylesheet" type="text/css" href="styles.css"> <!-- Подключите ваш файл стилей (styles.css) -->
+>>>>>>> new_branch
 </head>
 <body>
   <div class="container">
