@@ -18,12 +18,20 @@ function getSortedRecords($tableName, $sortField, $role = null)
     $query = "SELECT * FROM $tableName";
 
     if ($role) {
-        $query .= " WHERE role = '$role'";
+        $query .= " WHERE role = ?";
     }
 
     $query .= " ORDER BY $sortField";
 
-    $result = mysqli_query($mysqli, $query);
+    $stmt = mysqli_prepare($mysqli, $query);
+
+    if ($role) {
+        mysqli_stmt_bind_param($stmt, "s", $role);
+    }
+
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
 
     $records = [];
     while ($row = mysqli_fetch_assoc($result)) {
@@ -48,29 +56,34 @@ if (isset($_POST['subject_action'])) {
         $subjectName = escape($_POST['subject_name']);
         $quota = isset($_POST['quota']) ? (int) $_POST['quota'] : 0;
 
-        $query = "INSERT INTO subjects (name, quota) VALUES ('$subjectName', $quota)";
-        mysqli_query($mysqli, $query);
+        $query = "INSERT INTO subjects (name, quota) VALUES (?, ?)";
+        $stmt = mysqli_prepare($mysqli, $query);
+        mysqli_stmt_bind_param($stmt, "si", $subjectName, $quota);
+        mysqli_stmt_execute($stmt);
     } elseif ($action === 'update') {
         if (isset($_POST['subject_id'])) {
             $subjectId = (int) $_POST['subject_id'];
             $subjectName = escape($_POST['subject_name']);
             $quota = isset($_POST['quota']) ? (int) $_POST['quota'] : 0;
 
-            $query = "UPDATE subjects SET name = '$subjectName', quota = $quota WHERE id = $subjectId";
-            mysqli_query($mysqli, $query);
+            $query = "UPDATE subjects SET name = ?, quota = ? WHERE id = ?";
+            $stmt = mysqli_prepare($mysqli, $query);
+            mysqli_stmt_bind_param($stmt, "sii", $subjectName, $quota, $subjectId);
+            mysqli_stmt_execute($stmt);
         }
     } elseif ($action === 'delete') {
         if (isset($_POST['subject_id'])) {
             $subjectId = (int) $_POST['subject_id'];
 
-            $query = "DELETE FROM subjects WHERE id = $subjectId";
-            mysqli_query($mysqli, $query);
+            $query = "DELETE FROM subjects WHERE id = ?";
+            $stmt = mysqli_prepare($mysqli, $query);
+            mysqli_stmt_bind_param($stmt, "i", $subjectId);
+            mysqli_stmt_execute($stmt);
         }
     }
 
     redirectToPage('admin_dashboard.php');
 }
-
 
 // Обработка действий, связанных с таблицей 'users' (преподаватели)
 if (isset($_POST['teacher_action'])) {
@@ -86,33 +99,38 @@ if (isset($_POST['teacher_action'])) {
         // Хеширование пароля
         $hashedPassword = password_hash($randomPassword, PASSWORD_DEFAULT);
 
-        $query = "INSERT INTO users (full_name, email, password, role, status) VALUES ('$teacherName', '$teacherEmail', '$hashedPassword', 'teacher', 'active')";
-        mysqli_query($mysqli, $query);
-        
+        $query = "INSERT INTO users (full_name, email, password, role, status) VALUES (?, ?, ?, 'teacher', 'active')";
+        $stmt = mysqli_prepare($mysqli, $query);
+        mysqli_stmt_bind_param($stmt, "sss", $teacherName, $teacherEmail, $hashedPassword);
+        mysqli_stmt_execute($stmt);
+
         // Отправка пароля на почту преподавателя
         $subject = 'Добро пожаловать на сайт!';
         $message = "Ваш сгенерированный пароль: $randomPassword";
-        
+
         if (sendEmail($teacherEmail, $subject, $message)) {
             echo 'Пароль отправлен на почту преподавателя.';
         } else {
             echo 'Не удалось отправить пароль на почту преподавателя.';
         }
-
     } elseif ($action === 'update') {
         if (isset($_POST['teacher_id'])) {
-            $teacherId = $_POST['teacher_id'];
+            $teacherId = (int) $_POST['teacher_id'];
             $teacherName = $_POST['teacher_name'];
 
-            $query = "UPDATE users SET full_name = '$teacherName' WHERE id = $teacherId";
-            mysqli_query($mysqli, $query);
+            $query = "UPDATE users SET full_name = ? WHERE id = ?";
+            $stmt = mysqli_prepare($mysqli, $query);
+            mysqli_stmt_bind_param($stmt, "si", $teacherName, $teacherId);
+            mysqli_stmt_execute($stmt);
         }
     } elseif ($action === 'delete') {
         if (isset($_POST['teacher_id'])) {
-            $teacherId = $_POST['teacher_id'];
+            $teacherId = (int) $_POST['teacher_id'];
 
-            $query = "DELETE FROM users WHERE id = $teacherId";
-            mysqli_query($mysqli, $query);
+            $query = "DELETE FROM users WHERE id = ?";
+            $stmt = mysqli_prepare($mysqli, $query);
+            mysqli_stmt_bind_param($stmt, "i", $teacherId);
+            mysqli_stmt_execute($stmt);
         }
     }
 
@@ -122,19 +140,23 @@ if (isset($_POST['teacher_action'])) {
 // Обработка действий, связанных с таблицей 'users' (студенты)
 if (isset($_POST['student_action'])) {
     $action = $_POST['student_action'];
-    $studentId = $_POST['student_id'];
+    $studentId = (int) $_POST['student_id'];
 
     if ($action === 'update_status') {
         $status = $_POST['student_status'];
 
-        $query = "UPDATE users SET status = '$status' WHERE id = $studentId";
-        mysqli_query($mysqli, $query);
+        $query = "UPDATE users SET status = ? WHERE id = ?";
+        $stmt = mysqli_prepare($mysqli, $query);
+        mysqli_stmt_bind_param($stmt, "si", $status, $studentId);
+        mysqli_stmt_execute($stmt);
     } elseif ($action === 'update_password') {
         $password = $_POST['student_password'];
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $query = "UPDATE users SET password = '$hashedPassword' WHERE id = $studentId";
-        mysqli_query($mysqli, $query);
+        $query = "UPDATE users SET password = ? WHERE id = ?";
+        $stmt = mysqli_prepare($mysqli, $query);
+        mysqli_stmt_bind_param($stmt, "si", $hashedPassword, $studentId);
+        mysqli_stmt_execute($stmt);
     }
 
     redirectToPage('admin_dashboard.php');

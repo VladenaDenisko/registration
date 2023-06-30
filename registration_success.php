@@ -28,6 +28,9 @@ if (isset($_SESSION['user_id'])) {
 // Получение кода подтверждения из GET-параметров
 $confirmationCode = $_GET['confirmation_code'];
 
+// Экранирование и очистка данных
+$confirmationCode = escape($confirmationCode);
+
 // Проверка кода подтверждения в базе данных
 $query = "SELECT id FROM users WHERE confirmation_code = ?";
 $stmt = $mysqli->prepare($query);
@@ -36,6 +39,7 @@ $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($userId);
 $stmt->fetch();
+$stmt->close();
 
 // Если код действителен, изменяем статус учетной записи на "Активен"
 if ($userId) {
@@ -43,10 +47,11 @@ if ($userId) {
     $stmt = $mysqli->prepare($query);
     $stmt->bind_param('i', $userId);
     $stmt->execute();
+    $stmt->close();
 
     $_SESSION['user_id'] = $userId; // Сохраняем идентификатор пользователя в сессии
     $_SESSION['role'] = 'student';
-    
+
     // Перенаправляем на страницу с сообщением об успешном подтверждении регистрации
     redirectToPage('registration_confirmation_success.php');
     exit();
@@ -54,6 +59,7 @@ if ($userId) {
     echo 'Недействительный код подтверждения.';
 }
 ?>
+
 
 <!DOCTYPE html>
 <html>

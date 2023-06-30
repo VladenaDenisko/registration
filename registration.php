@@ -10,20 +10,19 @@ if (isset($_SESSION['user_id'])) {
   $role = $_SESSION['role'];
   switch ($role) {
     case 'admin':
-      redirectToPage('Location: admin_dashboard.php');
-      break;
+      redirectToPage('admin_dashboard.php');
+      exit();
     case 'teacher':
-      redirectToPage('Location: teacher_dashboard.php');
-      break;
+      redirectToPage('teacher_dashboard.php');
+      exit();
     case 'student':
-      redirectToPage('Location: student_dashboard.php');
-      break;
+      redirectToPage('student_dashboard.php');
+      exit();
     default:
       // Если у пользователя нет определенной роли, перенаправляем на страницу выхода
-      redirectToPage('Location: logout.php');
-      break;
+      redirectToPage('logout.php');
+      exit();
   }
-  exit();
 }
 
 // Обработка формы регистрации
@@ -37,17 +36,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Экранирование и очистка данных
   $fullName = escape($fullName);
   $email = escape($email);
-  $password = escape($password);
 
   // Хеширование пароля
   $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
   // Генерация кода для подтверждения регистрации
   $confirmationCode = generateConfirmationCode();
+  $confirmationCode = escape($confirmationCode);
 
   // Сохранение данных пользователя и кода подтверждения в базе данных
-  $query = "INSERT INTO users (full_name, email, password, role, status, confirmation_code) VALUES ('$fullName', '$email', '$hashedPassword', 'student', 'inactive', '$confirmationCode')";
-  mysqli_query($mysqli, $query);
+  $query = "INSERT INTO users (full_name, email, password, role, status, confirmation_code) VALUES (?, ?, ?, 'student', 'inactive', ?)";
+  $stmt = $mysqli->prepare($query);
+  $stmt->bind_param('ssss', $fullName, $email, $hashedPassword, $confirmationCode);
+  $stmt->execute();
+  $stmt->close();
 
   // Отправка письма с кодом для подтверждения регистрации
   function sendConfirmationEmail($email, $confirmationCode) {
@@ -70,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   exit();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html>

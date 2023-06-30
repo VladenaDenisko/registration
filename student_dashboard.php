@@ -33,6 +33,7 @@ $schedule = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 ?>
 
+
 <!DOCTYPE html>
 <html>
 <head>

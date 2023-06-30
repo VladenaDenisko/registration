@@ -36,14 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $password = escape($password);
 
   // Запрос на получение данных пользователя из базы данных
-  $stmt = $mysqli->prepare("SELECT id, role FROM users WHERE email = ? AND status = 'active'");
+  $stmt = $mysqli->prepare("SELECT id, role, password FROM users WHERE email = ? AND status = 'active'");
   $stmt->bind_param("s", $email);
   $stmt->execute();
-  $stmt->bind_result($userId, $userRole);
+  $stmt->bind_result($userId, $userRole, $hashedPassword);
   $stmt->fetch();
   $stmt->close();
 
-  if ($userId && $userRole) {
+  if ($userId && $userRole && password_verify($password, $hashedPassword)) {
     $_SESSION['user_id'] = $userId;
     $_SESSION['role'] = $userRole;
     switch ($userRole) {

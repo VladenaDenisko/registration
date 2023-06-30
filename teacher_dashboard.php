@@ -29,12 +29,14 @@ if (!$teacher_name) {
     $teacher_name = 'Недоступно';
 }
 
-// Получение предметов, которые преподает преподаватель
+// Получение предметов, которые преподавает преподаватель
 $query = "SELECT * FROM subjects WHERE id IN (SELECT subject_id FROM teacher_schedule WHERE teacher_id = ?) ORDER BY name";
 $stmt = $mysqli->prepare($query);
 $stmt->bind_param('i', $teacher_id);
 $stmt->execute();
-$subjects = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$result = $stmt->get_result();
+$subjects = $result->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
 
 // Получение студентов, зарегистрированных на предметы преподавателя
 $query = "SELECT users.full_name AS student_name, subjects.name AS subject_name, student_schedule.subject_status 
@@ -46,7 +48,9 @@ $query = "SELECT users.full_name AS student_name, subjects.name AS subject_name,
 $stmt = $mysqli->prepare($query);
 $stmt->bind_param('i', $teacher_id);
 $stmt->execute();
-$students = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$result = $stmt->get_result();
+$students = $result->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
